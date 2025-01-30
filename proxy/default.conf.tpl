@@ -2,24 +2,37 @@ server {
     listen 80;
     server_name matdb.ir www.matdb.ir;
 
-    # Redirect HTTP to HTTPS (for users connecting via Cloudflare)
-    return 301 https://$host$request_uri;
-}
+    # Redirect HTTP to HTTPS if it's not already using HTTPS.
+    if ($http_x_forwarded_proto = "http") {
+        return 301 https://$host$request_uri;
+    }
 
-server {
-    listen 443;
-    server_name matdb.ir www.matdb.ir;
-
-    # No need for SSL certificates when using Flexible SSL in Cloudflare
-    # Traffic between Cloudflare and the server is HTTP
-
+    # Handle static files
     location /static {
         alias /vol/static;
     }
 
+    # Handle dynamic requests (uwsgi to Django app)
     location / {
-        uwsgi_pass           ${APP_HOST}:${APP_PORT};
-        include              /etc/nginx/uwsgi_params;
+        include /etc/nginx/uwsgi_params;
+        uwsgi_pass app:8000;
+        client_max_body_size 10M;
+    }
+}
+
+server {
+    listen 443;  # No need for ssl configuration since Cloudflare handles SSL
+    server_name matdb.ir www.matdb.ir;
+
+    # Handle static files
+    location /static {
+        alias /vol/static;
+    }
+
+    # Handle dynamic requests (uwsgi to Django app)
+    location / {
+        include /etc/nginx/uwsgi_params;
+        uwsgi_pass app:8000;
         client_max_body_size 10M;
     }
 }
