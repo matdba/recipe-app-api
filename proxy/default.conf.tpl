@@ -1,7 +1,17 @@
 server {
-    listen ${LISTEN_PORT};
-
+    listen 80;
     server_name matdb.ir www.matdb.ir;
+
+    # Redirect HTTP to HTTPS (for users connecting via Cloudflare)
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name matdb.ir www.matdb.ir;
+
+    # No need for SSL certificates when using Flexible SSL in Cloudflare
+    # Traffic between Cloudflare and the server is HTTP
 
     location /static {
         alias /vol/static;
