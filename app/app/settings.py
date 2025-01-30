@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'changeme')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get('DEBUG', 0)))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['matdb.ir', 'www.matdb.ir', '194.5.207.6']
 ALLOWED_HOSTS.extend(
     filter(
         None,
