@@ -7,7 +7,7 @@ server {
 }
 
 server {
-    listen 443 ssl;
+    listen 443;
     server_name matdb.ir www.matdb.ir;
 
     # No need for SSL certificates when using Flexible SSL in Cloudflare
