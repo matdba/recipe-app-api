@@ -16,7 +16,7 @@ server {
 }
 
 server {
-    listen 443;  # No need for ssl configuration since Cloudflare handles SSL
+    listen 443;
     server_name matdb.ir www.matdb.ir;
 
     # Handle static files
